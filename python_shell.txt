@@ -1,0 +1,133 @@
+(venv) jk@jk-VirtualBox:~/PycharmProjects/django2/NewsPaper$ python manage.py shell
+Python 3.8.10 (default, Nov 14 2022, 12:59:47)
+[GCC 9.4.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from news.models import *
+>>> User.objects.create_user('username1')
+<User: username1>
+>>> User.objects.create_user('username2')
+<User: username2>
+>>> Author.objects.create(author_name = User.objects.get(pk=1))
+<Author: Author object (1)>
+>>> Author.objects.create(author_name = User.objects.get(pk=2))
+<Author: Author object (2)>
+>>>
+>>> Category.objects.create(name = 'Sport')
+<Category: Category object (1)>
+>>> Category.objects.create(name = 'Literature')
+<Category: Category object (2)>
+>>> Category.objects.create(name = 'IT')
+<Category: Category object (3)>
+>>> Category.objects.create(name = 'Art')
+<Category: Category object (4)>
+>>>
+>>> Post.objects.create(author = Author.objects.get(pk=1), title='What we know about AI?', text='What we know about AI? What we know about AI? What we know about AI? What we know about AI?', post_type = 'A')
+<Post: Post object (1)>
+>>> Post.objects.create(author = Author.objects.get(pk=2), title='What we do not know about AI?', text='What we do not know about AI? What we do not  know about AI? What we do not  know about AI? What we do not  know about AI?', post_type = 'A')
+<Post: Post object (2)>
+>>> Post.objects.create(author = Author.objects.get(pk=2), title='Abracadabra release from IT zoo!', text='Abracadabra release from IT zoo! Abracadabra release from IT zoo! Abracadabra release from IT zoo! Abracadabra release from IT zoo!', post_type = 'N')
+<Post: Post object (3)>
+>>> PostCategory.objects.create(post = Post.objects.get(pk=1), category = Category.objects.get(pk=3))
+<PostCategory: PostCategory object (1)>
+>>> PostCategory.objects.create(post = Post.objects.get(pk=1), category = Category.objects.get(pk=4))
+<PostCategory: PostCategory object (2)>
+>>> PostCategory.objects.create(post = Post.objects.get(pk=2), category = Category.objects.get(pk=1))
+<PostCategory: PostCategory object (3)>
+>>> PostCategory.objects.create(post = Post.objects.get(pk=2), category = Category.objects.get(pk=2))
+<PostCategory: PostCategory object (4)>
+>>> PostCategory.objects.create(post = Post.objects.get(pk=3), category = Category.objects.get(pk=4))
+<PostCategory: PostCategory object (5)>
+>>>
+>>> Comment.objects.create(text = "This is comment!!!", post = Post.objects.get(pk=1), user = User.objects.get(pk=1))
+<Comment: Comment object (1)>
+>>> for i in range(1,4):
+...     Comment.objects.create(text = "This is comment!!!", post = Post.objects.get(pk=i), user = User.objects.get(pk=random.randint(1,2)))
+...
+<Comment: Comment object (2)>
+<Comment: Comment object (3)>
+<Comment: Comment object (4)>
+>>> for i in range(1,4):
+...     Comment.objects.create(text = "This is comment!!!", post = Post.objects.get(pk=i), user = User.objects.get(pk=random.randint(1,2)))
+...
+<Comment: Comment object (5)>
+<Comment: Comment object (6)>
+<Comment: Comment object (7)>
+>>>
+>>> Post.objects.get(pk=1).like()
+>>> Post.objects.get(pk=1).like()
+>>> Post.objects.get(pk=2).dislike()
+>>> Post.objects.get(pk=2).dislike()
+>>> Post.objects.get(pk=3).like()
+>>> Post.objects.get(pk=3).like()
+>>> Post.objects.get(pk=3).like()
+>>> Post.objects.get(pk=3).like()
+>>> Post.objects.get(pk=3).like()
+>>> Post.objects.get(pk=3).like()
+>>> Comment.objects.get(pk=1).like()
+>>> Comment.objects.get(pk=1).like()
+>>> Comment.objects.get(pk=1).like()
+>>> Comment.objects.get(pk=2).like()
+>>> Comment.objects.get(pk=2).like()
+>>> Comment.objects.get(pk=3).dislike()
+>>> Comment.objects.get(pk=3).dislike()
+>>> Comment.objects.get(pk=3).dislike()
+>>> Comment.objects.get(pk=3).dislike()
+>>> Comment.objects.get(pk=4).like()
+>>> Comment.objects.get(pk=5).dislike()
+>>> Comment.objects.get(pk=6).like()
+>>> Comment.objects.get(pk=6).like()
+>>> Comment.objects.get(pk=6).like()
+>>> Comment.objects.get(pk=6).like()
+>>> Comment.objects.get(pk=6).like()
+>>> Comment.objects.get(pk=6).like()
+>>> Comment.objects.get(pk=7).dislike()
+>>> Comment.objects.get(pk=7).dislike()
+>>> Comment.objects.get(pk=7).dislike()
+>>> Comment.objects.get(pk=7).dislike()
+>>> Author.objects.get(pk=1).update_rating()
+>>> Author.objects.get(pk=2).update_rating()
+>>> best_rating = Author.objects.order_by('-rating')[:1]
+>>> best_rating
+<QuerySet [<Author: Author object (1)>]>
+>>>
+>>> best_rating[0].author_name
+<User: username1>
+>>> best_rating[0].rating
+17
+>>>
+>>> best_article = Post.objects.filter(post_type='A').order_by('-rating')[:1]
+>>>
+>>> best_article[0].creation_date
+datetime.datetime(2023, 2, 23, 16, 27, 43, 183070, tzinfo=datetime.timezone.utc)
+>>> best_article[0].author.author_name
+<User: username1>
+>>> best_article[0].rating
+2
+>>>
+>>> best_article[0].title
+'What we know about AI?'
+>>> best_article[0].preview()
+'What we know about AI? What we know about AI? What we know about AI? What we know about AI?...'
+>>>
+>>> all_comment = Comment.objects.filter(post = best_article[0])
+>>>
+>>> for i in all_comment:
+...     i.creation_date
+...     i.user
+...     i.rating
+...     i.text
+...
+datetime.datetime(2023, 2, 24, 9, 39, 48, 323246, tzinfo=datetime.timezone.utc)
+<User: username1>
+3
+'This is comment!!!'
+datetime.datetime(2023, 2, 24, 9, 47, 50, 133655, tzinfo=datetime.timezone.utc)
+<User: username1>
+2
+'This is comment!!!'
+datetime.datetime(2023, 2, 24, 9, 47, 58, 510721, tzinfo=datetime.timezone.utc)
+<User: username1>
+-1
+'This is comment!!!'
+>>>
