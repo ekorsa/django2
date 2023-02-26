@@ -1,1 +1,9 @@
 .idea/
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+
+NewsPaper/NewsPaper/__pycache__/
+NewsPaper/news/__pycache__/
