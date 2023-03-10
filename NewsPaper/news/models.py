@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
+from django.urls import reverse
 
 # Create your models here.
 
@@ -48,6 +49,9 @@ class Post(models.Model):
 
     def preview(self):
         return self.text[0:123] + "..."
+
+    def get_absolute_url(self):
+        return reverse('new_detail', args=[str(self.id)])
 
     def __str__(self):
         return f'{self.title.title()}: {self.text[:20]}'
