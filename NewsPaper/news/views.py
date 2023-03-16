@@ -1,5 +1,9 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.models import Group, User
+from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post
+from .models import Post, Author
 from .forms import NewForm
 from .filters import PostFilter
 from django.urls import reverse_lazy
@@ -34,6 +38,7 @@ class NewsList(ListView):
         context = super().get_context_data(**kwargs)
         # Добавляем в контекст объект фильтрации.
         context['filterset'] = self.filterset
+        context['is_author'] = self.request.user.groups.filter(name='Authors').exists()
         return context
 
 class NewDetail(DetailView):
@@ -41,20 +46,40 @@ class NewDetail(DetailView):
     template_name = 'new.html'
     context_object_name = 'new'
 
-class NewCreate(CreateView):
+class NewCreate(PermissionRequiredMixin, CreateView):
     # Указываем нашу разработанную форму
+    permission_required = ('news.add_post',)
+    raise_exception = True
     form_class = NewForm
     # модель товаров
     model = Post
     # и новый шаблон, в котором используется форма.
     template_name = 'new_edit.html'
 
-class NewUpdate(UpdateView):
+    def form_valid(self, form):
+        form.instance.author = self.request.user.author
+        return super().form_valid(form)
+
+class NewUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_post',)
     form_class = NewForm
     model = Post
     template_name = 'new_edit.html'
 
-class NewDelete(DeleteView):
+class NewDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news.delete_post',)
     model = Post
     template_name = 'new_delete.html'
     success_url = reverse_lazy('new_list')
+
+@login_required
+def upgrade_user(request):
+    user = request.user
+    group = Group.objects.get(name='Authors')
+    print(user)
+    print(group)
+
+    if not user.groups.filter(name='Authors').exists():
+        group.user_set.add(user)
+        Author.objects.create(author_name=User.objects.get(pk=user.id))
+    return redirect('/news')

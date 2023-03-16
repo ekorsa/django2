@@ -11,7 +11,7 @@ class NewForm(forms.ModelForm):
             'title',
             'text',
             'post_type',
-            'author',
+            # 'author',
             'post_category',
         ]
 

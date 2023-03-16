@@ -1,9 +1,13 @@
 .idea/
 
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 
+NewsPaper/NewsPaper/__pycache__/*
+*.py[cod]
 
-NewsPaper/NewsPaper/__pycache__/
-NewsPaper/news/__pycache__/
+NewsPaper/news/__pycache__/*
+*.py[cod]
+
