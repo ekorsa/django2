@@ -11,7 +11,7 @@ from django_apscheduler import util
 from django_apscheduler.jobstores import DjangoJobStore
 from django_apscheduler.models import DjangoJobExecution
 
-from NewsPaper.news.models import Post, Category
+from news.models import Post, Category
 
 # from .models import Post, Subscription, Category
 
@@ -23,8 +23,9 @@ def my_job():
     today = datetime.datetime.now()
     last_week = today - datetime.timedelta(days=7)
     posts = Post.objects.filter(creation_date__gte=last_week)
-    categories = set(posts.values_list('category__name', flat=True))
-    subscribers = set(Category.filter(name_in=categories).values_list('subscribers_email', flat=True))
+    categories = set(posts.values_list('post_category__name', flat=True))
+    subscribers = set(Category.objects.filter(name__in=categories).values_list('subscribers__email', flat=True))
+    print(subscribers)
 
     html_content = render_to_string(
         'weekly_post.html',
@@ -72,7 +73,7 @@ class Command(BaseCommand):
 
         scheduler.add_job(
             my_job,
-            trigger=CronTrigger(second="*/10"),  # Every 10 seconds
+            trigger=CronTrigger(day_of_week="fri", hour="18", minute="00"),
             id="my_job",  # The `id` assigned to each job MUST be unique
             max_instances=1,
             replace_existing=True,
