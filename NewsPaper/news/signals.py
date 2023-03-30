@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from django.template.loader import render_to_string
 
 from .models import PostCategory, Subscription
+from .tasks import task_send_notification
 
 
 def send_notifications(preview, pk, title, subscribers):
@@ -35,5 +36,6 @@ def notify_after_creation(instance, **kwargs):
         subscribers = []
         for category in categories:
             subscribers += category.subscribers.all()
+        subscribers = [s.email for s in subscribers]
 
-        send_notifications(instance.preview(), instance.pk, instance.title, subscribers)
+        task_send_notification(instance.preview(), instance.pk, instance.title, subscribers)

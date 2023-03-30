@@ -23,7 +23,7 @@ class NewsList(ListView):
     # Это имя списка, в котором будут лежать все объекты.
     # Его надо указать, чтобы обратиться к списку объектов в html-шаблоне.
     context_object_name = 'news'
-    paginate_by = 2
+    paginate_by = 10
 
     def get_queryset(self):
         # Получаем обычный запрос

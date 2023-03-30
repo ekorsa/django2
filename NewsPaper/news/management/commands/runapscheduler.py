@@ -13,6 +13,8 @@ from django_apscheduler.models import DjangoJobExecution
 
 from news.models import Post, Category
 
+from news.tasks import task_mon_job_notification
+
 # from .models import Post, Subscription, Category
 
 logger = logging.getLogger(__name__)
@@ -25,7 +27,7 @@ def my_job():
     posts = Post.objects.filter(creation_date__gte=last_week)
     categories = set(posts.values_list('post_category__name', flat=True))
     subscribers = set(Category.objects.filter(name__in=categories).values_list('subscribers__email', flat=True))
-    print(subscribers)
+    # print(subscribers)
 
     html_content = render_to_string(
         'weekly_post.html',
@@ -44,6 +46,11 @@ def my_job():
 
     msg.attach_alternative(html_content, 'text/html')
     msg.send()
+
+
+def mon_job_notification():
+    # pass
+    task_mon_job_notification()
 
 
 # The `close_old_connections` decorator ensures that database connections,
@@ -79,6 +86,16 @@ class Command(BaseCommand):
             replace_existing=True,
         )
         logger.info("Added job 'my_job'.")
+
+        scheduler.add_job(
+            mon_job_notification,
+            trigger=CronTrigger(day_of_week="mon", hour="8", minute="00"),
+            # trigger=CronTrigger(second="*/10"),
+            id="mon_job_notification",  # The `id` assigned to each job MUST be unique
+            max_instances=1,
+            replace_existing=True,
+        )
+        logger.info("Added job 'mon_job_notification'.")
 
         scheduler.add_job(
             delete_old_job_executions,
