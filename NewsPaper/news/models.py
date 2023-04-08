@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
@@ -57,6 +58,10 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.title.title()}: {self.text[:20]}'
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # сначала вызываем метод родителя, чтобы объект сохранился
+        cache.delete(f'product-{self.pk}')  # затем удаляем его из кэша, чтобы сбросить его
 
 
 class PostCategory(models.Model):
