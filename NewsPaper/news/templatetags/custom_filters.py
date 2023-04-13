@@ -1,9 +1,9 @@
 from django import template
 
-
 register = template.Library()
 
 censor_list = ['Abracadabra', 'From']
+
 
 @register.filter()
 def censor(value: str) -> str:
@@ -12,18 +12,19 @@ def censor(value: str) -> str:
         value = value.replace(i.lower(), f'{i[0].lower()}***{i[-1]}')
     return f'{value}'
 
+
 CURRENCIES_SYMBOLS = {
-   'rub': 'Р',
-   'usd': '$',
+    'rub': 'Р',
+    'usd': '$',
 }
 
 
 @register.filter()
 def currency(value, code='rub'):
-   """
-   value: значение, к которому нужно применить фильтр
-   code: код валюты
-   """
-   postfix = CURRENCIES_SYMBOLS[code]
+    """
+    value: значение, к которому нужно применить фильтр
+    code: код валюты
+    """
+    postfix = CURRENCIES_SYMBOLS[code]
 
-   return f'{value} {postfix}'
+    return f'{value} {postfix}'

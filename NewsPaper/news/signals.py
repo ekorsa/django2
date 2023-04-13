@@ -1,11 +1,10 @@
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from django.template.loader import render_to_string
 
-from .models import PostCategory, Subscription
+from .models import PostCategory
 from .tasks import task_send_notification
 
 

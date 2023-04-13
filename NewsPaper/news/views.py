@@ -3,14 +3,14 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import Group, User
 from django.core.cache import cache
 from django.db.models import Exists, OuterRef
-from django.shortcuts import render
-from django.views.decorators.csrf import csrf_protect
-from django.shortcuts import redirect
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Author, Category, Subscription
-from .forms import NewForm
-from .filters import PostFilter
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_protect
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
+
+from .filters import PostFilter
+from .forms import NewForm
+from .models import Author, Category, Post, Subscription
 
 
 class NewsList(ListView):
@@ -45,6 +45,7 @@ class NewsList(ListView):
         context['is_author'] = self.request.user.groups.filter(name='Authors').exists()
         return context
 
+
 class NewDetail(DetailView):
     model = Post
     template_name = 'new.html'
@@ -52,7 +53,8 @@ class NewDetail(DetailView):
 
     def get_object(self, *args, **kwargs):  # переопределяем метод получения объекта, как ни странно
         obj = cache.get(f'product-{self.kwargs["pk"]}',
-                        None)  # кэш очень похож на словарь, и метод get действует так же. Он забирает значение по ключу, если его нет, то забирает None.
+                        None)  # кэш очень похож на словарь, и метод get действует так же. Он забирает
+        # значение по ключу, если его нет, то забирает None.
 
         # если объекта нет в кэше, то получаем его и записываем в кэш
         if not obj:
@@ -60,7 +62,6 @@ class NewDetail(DetailView):
             cache.set(f'product-{self.kwargs["pk"]}', obj)
 
         return obj
-
 
 
 class NewCreate(PermissionRequiredMixin, CreateView):
@@ -77,17 +78,20 @@ class NewCreate(PermissionRequiredMixin, CreateView):
         form.instance.author = self.request.user.author
         return super().form_valid(form)
 
+
 class NewUpdate(PermissionRequiredMixin, UpdateView):
     permission_required = ('news.change_post',)
     form_class = NewForm
     model = Post
     template_name = 'new_edit.html'
 
+
 class NewDelete(PermissionRequiredMixin, DeleteView):
     permission_required = ('news.delete_post',)
     model = Post
     template_name = 'new_delete.html'
     success_url = reverse_lazy('new_list')
+
 
 @login_required
 def upgrade_user(request):
@@ -100,6 +104,7 @@ def upgrade_user(request):
         group.user_set.add(user)
         Author.objects.create(author_name=User.objects.get(pk=user.id))
     return redirect('/news')
+
 
 @login_required
 @csrf_protect

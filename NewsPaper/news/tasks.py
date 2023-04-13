@@ -1,13 +1,13 @@
 import datetime
 
-from celery import shared_task
-import time
+from django.conf import settings
+# import time
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
-from django.conf import settings
+from celery import shared_task
 
-from .models import Post, Category
+from .models import Category, Post
 
 
 @shared_task

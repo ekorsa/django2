@@ -1,6 +1,9 @@
-from django_filters import FilterSet, DateTimeFilter
 from django.forms import DateTimeInput
+
+from django_filters import DateTimeFilter, FilterSet
+
 from .models import Post
+
 
 # Создаем свой набор фильтров для модели Product.
 # FilterSet, который мы наследуем,
@@ -16,18 +19,18 @@ class PostFilter(FilterSet):
     )
 
     class Meta:
-       # В Meta классе мы должны указать Django модель,
-       # в которой будем фильтровать записи.
-       model = Post
-       # В fields мы описываем по каким полям модели
-       # будет производиться фильтрация.
-       fields = {
-           # поиск по названию
-           'title': ['icontains'],
-           # количество товаров должно быть больше или равно
-           'post_category': ['exact'],
-           # 'creation_date': [
-           #     'lt',  # цена должна быть меньше или равна указанной
-           #     'gt',  # цена должна быть больше или равна указанной
-           # ],
-       }
+        # В Meta классе мы должны указать Django модель,
+        # в которой будем фильтровать записи.
+        model = Post
+        # В fields мы описываем по каким полям модели
+        # будет производиться фильтрация.
+        fields = {
+            # поиск по названию
+            'title': ['icontains'],
+            # количество товаров должно быть больше или равно
+            'post_category': ['exact'],
+            # 'creation_date': [
+            #     'lt',  # цена должна быть меньше или равна указанной
+            #     'gt',  # цена должна быть больше или равна указанной
+            # ],
+        }
