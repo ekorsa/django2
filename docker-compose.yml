@@ -1,0 +1,21 @@
+version: '3.7'
+# volumes:
+#  postgres_data:
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:14.7
+    #    build:
+    #  context: .
+    #  dockerfile: dockerization/Dockerfile-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123!@#qweQWE
+      POSTGRES_DB: postgres
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ../2. Init Database:/docker-entrypoint-initdb.d
+      - .:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
