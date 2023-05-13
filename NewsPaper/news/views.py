@@ -11,9 +11,14 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 from .filters import PostFilter
 from .forms import NewForm
 from .models import Author, Category, Post, Subscription
+import logging
+
+# logger = logging.getLogger('django')
+logger = logging.getLogger(__name__)
 
 
 class NewsList(ListView):
+    # logger.info('INFO')
     # Указываем модель, объекты которой мы будем выводить
     model = Post
     # Поле, которое будет использоваться для сортировки объектов
@@ -47,6 +52,7 @@ class NewsList(ListView):
 
 
 class NewDetail(DetailView):
+    # logger.info('INFO')
     model = Post
     template_name = 'new.html'
     context_object_name = 'new'
@@ -65,6 +71,7 @@ class NewDetail(DetailView):
 
 
 class NewCreate(PermissionRequiredMixin, CreateView):
+    # logger.info('INFO')
     # Указываем нашу разработанную форму
     permission_required = ('news.add_post',)
     raise_exception = True
@@ -80,6 +87,7 @@ class NewCreate(PermissionRequiredMixin, CreateView):
 
 
 class NewUpdate(PermissionRequiredMixin, UpdateView):
+    # logger.info('INFO')
     permission_required = ('news.change_post',)
     form_class = NewForm
     model = Post
@@ -87,6 +95,7 @@ class NewUpdate(PermissionRequiredMixin, UpdateView):
 
 
 class NewDelete(PermissionRequiredMixin, DeleteView):
+    # logger.info('INFO')
     permission_required = ('news.delete_post',)
     model = Post
     template_name = 'new_delete.html'
@@ -95,6 +104,7 @@ class NewDelete(PermissionRequiredMixin, DeleteView):
 
 @login_required
 def upgrade_user(request):
+    # logger.info('INFO')
     user = request.user
     group = Group.objects.get(name='Authors')
     print(user)
