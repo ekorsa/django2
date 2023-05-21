@@ -2,6 +2,7 @@
 
 {% load custom_filters %}
 {% load custom_tags %}
+{% load i18n %}
 
 {% block title %}
 News
@@ -47,10 +48,10 @@ News
                <td>
                     {# А здесь доступ для каждой ссылки теперь будем проверять отдельно #}
                     {% if perms.news.change_post %}
-                    <a href="{% url 'new_update' pk=new.id %}">Изменить</a>
+                    <a href="{% url 'new_update' pk=new.id %}">{% trans "Change" %}</a>
                     {% endif %}
                     {% if perms.news.delete_post %}
-                    <a href="{% url 'new_delete' new.id %}">Удалить</a>
+                    <a href="{% url 'new_delete' new.id %}">{% trans "Delete" %}</a>
                     {% endif %}
                </td>
            </tr>

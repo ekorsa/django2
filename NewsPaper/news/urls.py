@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 # Импортируем созданное нами представление
 from .views import NewCreate, NewDelete, NewDetail, NewsList, NewUpdate, subscriptions, upgrade_user
@@ -17,4 +17,5 @@ urlpatterns = [
     path('<int:pk>/update/', NewUpdate.as_view(), name='new_update'),
     path('<int:pk>/delete/', NewDelete.as_view(), name='new_delete'),
     path('subscriptions/', subscriptions, name='subscriptions'),
+    path('i18n/', include('django.conf.urls.i18n')),
 ]

@@ -105,7 +105,7 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console_debug', 'console_warning', 'console_error', 'file_general'],
-            # 'level': 'DEBUG',
+            'level': 'DEBUG',
             'propagate': True,
         },
         'django.request': {
@@ -142,6 +142,7 @@ ALLOWED_HOSTS = ['127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -159,6 +160,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.yandex',
     "django_apscheduler",
+    'rest_framework',
 ]
 
 SITE_URL = 'http://127.0.0.1:8000'
@@ -167,6 +169,7 @@ SITE_ID = 1
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -245,7 +248,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru' # 'en-us'
+
+LANGUAGES = [
+    ('en-us', 'English'),
+    ('ru', 'Русский')
+]
 
 TIME_ZONE = 'UTC'
 
@@ -310,4 +318,13 @@ CACHES = {
 }
 
 ADMINS = [("Evgeniy", os.getenv('EMAIL_HOST_USER'))]
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale')
+]
+
+# LANGUAGE_CODE = 'ru'
+
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
+MODELTRANSLATION_TRANSLATION_REGISTRY = 'news.translation'
 
