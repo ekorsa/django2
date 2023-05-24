@@ -12,6 +12,8 @@ from .filters import PostFilter
 from .forms import NewForm
 from .models import Author, Category, Post, Subscription
 import logging
+from .serializers import PostSerializer
+from rest_framework import viewsets
 
 # logger = logging.getLogger('django')
 logger = logging.getLogger(__name__)
@@ -145,3 +147,44 @@ def subscriptions(request):
         'subscriptions.html',
         {'categories': categories_with_subscriptions},
     )
+
+
+class PostNewsViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+
+    Additionally we also provide an extra `highlight` action.
+    """
+    queryset = Post.objects.filter(post_type='N')
+    serializer_class = PostSerializer
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+    #                       IsOwnerOrReadOnly]
+
+    # @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
+    # def highlight(self, request, *args, **kwargs):
+    #     snippet = self.get_object()
+    #     return Response(snippet.highlighted)
+    #
+    # def perform_create(self, serializer):
+    #     serializer.save(owner=self.request.user)
+
+
+class PostArticleViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+
+    Additionally we also provide an extra `highlight` action.
+    """
+    queryset = Post.objects.filter(post_type='A')
+    serializer_class = PostSerializer
+
+    # def get_queryset(self):
+    #     """
+    #     This view should return a list of all the purchases
+    #     for the currently authenticated user.
+    #     """
+    #     user = self.request.user
+    #     return Purchase.objects.filter(purchaser=user)
+    #

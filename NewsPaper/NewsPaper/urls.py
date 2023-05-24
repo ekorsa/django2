@@ -15,6 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework.routers import DefaultRouter
+
+from news.views import PostNewsViewSet, PostArticleViewSet
+
+router = DefaultRouter()
+router.register(r'news', PostNewsViewSet, basename="news")
+router.register(r'article', PostArticleViewSet, basename="article")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,4 +30,5 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     # path('accounts/', include('django.contrib.auth.urls')),
     # path("accounts/", include("accounts.urls")),
+    path('api/', include(router.urls)),
 ]
